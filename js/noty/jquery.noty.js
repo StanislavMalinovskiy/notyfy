@@ -370,11 +370,11 @@ if (typeof Object.create !== 'function') {
         text:'',
         dismissQueue:true,
         template:'<div class="noty_message"><span class="noty_text"></span><div class="noty_close"></div></div>',
-        showEffect: function(bar) { bar.fadeIn(500); },
-        hideEffect: function(bar) { bar.fadeOut(500); },
+        showEffect: function(bar) { bar.animate({ height: 'toggle' }, 500, 'swing'); },
+        hideEffect: function(bar) { bar.animate({ height: 'toggle' }, 500, 'swing'); },
         timeout:false,
         force:false,
-        modal:true,
+        modal:false,
         closeWith:['click'],
         callback:{
             onShow:function () {
