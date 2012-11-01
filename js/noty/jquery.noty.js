@@ -100,8 +100,6 @@ if (typeof Object.create !== 'function') {
 
             self.options.layout.container.style.apply($(self.options.layout.container.selector));
 
-            console.log(self.options.layout.container)
-
             if ($.inArray('click', self.options.closeWith) > -1)
                 self.$bar.css('cursor', 'pointer').one('click', function () {
                     self.close();
