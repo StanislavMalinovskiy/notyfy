@@ -29,10 +29,7 @@ if (typeof Object.create !== 'function') {
             this.options = $.extend({}, $.noty.defaults, options);
 
             this.options.layout = (this.options.custom) ? $.noty.layouts['inline'] : $.noty.layouts[this.options.layout];
-            this.options.theme = $.noty.themes[this.options.theme];
-
             delete options.layout;
-            delete options.theme;
 
             this.options = $.extend({}, this.options, this.options.layout.options);
             this.options.id = 'noty_' + (new Date().getTime() * Math.floor(Math.random() * 1000000));
@@ -53,6 +50,10 @@ if (typeof Object.create !== 'function') {
             $bar.append(this.options.template).find('.noty_text').html(this.options.text);
 
             this.$bar = (this.options.layout.parent.object !== null) ? $(this.options.layout.parent.object).css(this.options.layout.parent.css).append($bar) : $bar;
+            this.$bar.addClass('noty_wrapper');
+
+            // Apply theme class
+            if(this.options.theme) { this.$bar.addClass('notytheme_'+this.options.theme); }
 
             // Set buttons if available
             if (this.options.buttons) {
@@ -93,15 +94,13 @@ if (typeof Object.create !== 'function') {
 
             $(self.options.layout.container.selector).append(self.$bar);
 
-            self.options.theme.style.apply(self);
-
             ($.type(self.options.layout.css) === 'function') ? this.options.layout.css.apply(self.$bar) : self.$bar.css(this.options.layout.css || {});
 
-            self.$bar.addClass(self.options.layout.addClass);
+            self.$bar.addClass(self.options.layout.addClass).addClass('noty_'+self.options.type);
 
             self.options.layout.container.style.apply($(self.options.layout.container.selector));
 
-            self.options.theme.callback.onShow.apply(this);
+            console.log(self.options.layout.container)
 
             if ($.inArray('click', self.options.closeWith) > -1)
                 self.$bar.css('cursor', 'pointer').one('click', function () {
@@ -124,14 +123,17 @@ if (typeof Object.create !== 'function') {
             if (self.options.callback.onShow)
                 self.options.callback.onShow.apply(self);
 
-            self.$bar.animate(
-                self.options.animation.open,
-                self.options.animation.speed,
-                self.options.animation.easing,
-                function () {
-                    if (self.options.callback.afterShow) self.options.callback.afterShow.apply(self);
-                    self.shown = true;
-                });
+            function after() {
+                if (self.options.callback.afterShow) self.options.callback.afterShow.apply(self);
+                self.shown = true;
+            }
+
+            if ($.isFunction(self.options.showEffect)) {
+                self.$bar.clearQueue().stop();
+                self.options.showEffect.call(self, self.$bar);
+                self.$bar.queue(after);
+            }
+            else { self.$bar.show(); after(); }
 
             // If noty is have a timeout option
             if (self.options.timeout)
@@ -166,46 +168,46 @@ if (typeof Object.create !== 'function') {
                 self.options.callback.onClose.apply(self);
             }
 
-            self.$bar.clearQueue().stop().animate(
-                self.options.animation.close,
-                self.options.animation.speed,
-                self.options.animation.easing,
-                function () {
-                    if (self.options.callback.afterClose) self.options.callback.afterClose.apply(self);
-                })
-                .promise().done(function () {
+            function after() {
+                if (self.options.callback.afterClose) self.options.callback.afterClose.apply(self);
+            }
 
-                    // Modal Cleaning
-                    if (self.options.modal) {
-                        $.notyRenderer.setModalCount(-1);
-                        if ($.notyRenderer.getModalCount() == 0) $('.noty_modal').fadeOut('fast', function () {
-                            $(this).remove();
-                        });
-                    }
+            if ($.isFunction(self.options.hideEffect)) {
+                self.$bar.clearQueue().stop();
+                self.options.hideEffect.call(self, self.$bar);
+                self.$bar.queue(after);
+            }
+            else { self.$bar.hide(); after(); }
 
-                    // Layout Cleaning
-                    $.notyRenderer.setLayoutCountFor(self, -1);
-                    if ($.notyRenderer.getLayoutCountFor(self) == 0) $(self.options.layout.container.selector).remove();
+            self.$bar.promise().done(function () {
+                // Modal Cleaning
+                if (self.options.modal) {
+                    $.notyRenderer.setModalCount(-1);
+                    if ($.notyRenderer.getModalCount() == 0) $('.noty_modal').fadeOut('fast', function () {
+                        $(this).remove();
+                    });
+                }
 
-                    // Make sure self.$bar has not been removed before attempting to remove it
-                    if (typeof self.$bar !== 'undefined' && self.$bar !== null ) {
-                        self.$bar.remove();
-                        self.$bar = null;
-                        self.closed = true;
-                    }
+                // Layout Cleaning
+                $.notyRenderer.setLayoutCountFor(self, -1);
+                if ($.notyRenderer.getLayoutCountFor(self) == 0) $(self.options.layout.container.selector).remove();
 
-                    delete $.noty.store[self.options.id]; // deleting noty from store
+                // Make sure self.$bar has not been removed before attempting to remove it
+                if (typeof self.$bar !== 'undefined' && self.$bar !== null ) {
+                    self.$bar.remove();
+                    self.$bar = null;
+                    self.closed = true;
+                }
 
-                    self.options.theme.callback.onClose.apply(self);
+                delete $.noty.store[self.options.id]; // deleting noty from store
 
-                    if (!self.options.dismissQueue) {
-                        // Queue render
-                        $.noty.ontap = true;
+                if (!self.options.dismissQueue) {
+                    // Queue render
+                    $.noty.ontap = true;
 
-                        $.notyRenderer.render();
-                    }
-
-                });
+                    $.notyRenderer.render();
+                }
+            });
 
         }, // end close
 
@@ -220,19 +222,6 @@ if (typeof Object.create !== 'function') {
         setType:function (type) {
             if (!this.closed) {
                 this.options.type = type;
-                this.options.theme.style.apply(this);
-                this.options.theme.callback.onShow.apply(this);
-            }
-            return this;
-        },
-
-        setTimeout:function (time) {
-            if (!this.closed) {
-                var self = this;
-                this.options.timeout = time;
-                self.$bar.delay(self.options.timeout).promise().done(function () {
-                    self.close();
-                });
             }
             return this;
         },
@@ -299,8 +288,10 @@ if (typeof Object.create !== 'function') {
     };
 
     $.notyRenderer.createModalFor = function (notification) {
-        if ($('.noty_modal').length == 0)
-            $('<div/>').addClass('noty_modal').data('noty_modal_count', 0).css(notification.options.theme.modal.css).prependTo($('body')).fadeIn('fast');
+        if ($('.noty_modal').length == 0) {
+            var modal = $('<div/>').addClass('noty_modal').data('noty_modal_count', 0).prependTo($('body')).fadeIn('fast');
+            if(notification.options.theme) { modal.addClass('notytheme_'+notification.options.theme); }
+        }
     };
 
     $.notyRenderer.getLayoutCountFor = function (notification) {
@@ -329,7 +320,6 @@ if (typeof Object.create !== 'function') {
     $.noty.queue = [];
     $.noty.ontap = true;
     $.noty.layouts = {};
-    $.noty.themes = {};
     $.noty.returns = 'object';
     $.noty.store = {};
 
@@ -379,20 +369,16 @@ if (typeof Object.create !== 'function') {
 
     $.noty.defaults = {
         layout:'top',
-        theme:'defaultTheme',
+        theme:false,
         type:'alert',
         text:'',
         dismissQueue:true,
         template:'<div class="noty_message"><span class="noty_text"></span><div class="noty_close"></div></div>',
-        animation:{
-            open:{height:'toggle'},
-            close:{height:'toggle'},
-            easing:'swing',
-            speed:500
-        },
+        showEffect: function(bar) { bar.fadeIn(500); },
+        hideEffect: function(bar) { bar.fadeOut(500); },
         timeout:false,
         force:false,
-        modal:false,
+        modal:true,
         closeWith:['click'],
         callback:{
             onShow:function () {
@@ -478,7 +464,7 @@ function noty(options) {
 
     if (options.theme == 'noty_theme_default') {
         using_old++;
-        options.theme = 'defaultTheme';
+        options.theme = false;
     }
 
     if (!options.hasOwnProperty('dismissQueue')) {
