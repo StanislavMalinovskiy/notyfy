@@ -168,16 +168,7 @@ if (typeof Object.create !== 'function') {
 
             function after() {
                 if (self.options.callback.afterClose) self.options.callback.afterClose.apply(self);
-            }
 
-            if ($.isFunction(self.options.hideEffect)) {
-                self.$bar.clearQueue().stop();
-                self.options.hideEffect.call(self, self.$bar);
-                self.$bar.queue(after);
-            }
-            else { self.$bar.hide(); after(); }
-
-            self.$bar.promise().done(function () {
                 // Modal Cleaning
                 if (self.options.modal) {
                     $.notyRenderer.setModalCount(-1);
@@ -205,7 +196,14 @@ if (typeof Object.create !== 'function') {
 
                     $.notyRenderer.render();
                 }
-            });
+            }
+
+            if ($.isFunction(self.options.hideEffect)) {
+                self.$bar.clearQueue().stop();
+                self.options.hideEffect.call(self, self.$bar);
+                self.$bar.queue(after);
+            }
+            else { self.$bar.hide(); after(); }
 
         }, // end close
 
