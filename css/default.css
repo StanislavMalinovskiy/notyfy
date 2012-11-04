@@ -14,18 +14,18 @@
 .noty_wrapper:last-child{ border-bottom-left-radius: 5px; border-bottom-right-radius: 5px; }
 
 /* Layout specific styles */
-#noty_top_layout_container .noty_wrapper{
+#noty_container_top .noty_wrapper{
 	border-radius: 0px 0px 5px 5px;
 	border-width: 0 2px 2px 2px;
 }
 
-#noty_bottom_layout_container .noty_wrapper{
+#noty_container_bottom .noty_wrapper{
 	border-radius: 5px 5px 0px 0px;
 	border-width: 2px 2px 0 2px;
 }
 
-#noty_top_layout_container .notytheme_defaultTheme:first-child{ border-radius: 0; }
-#noty_bottom_layout_container .notytheme_defaultTheme:last-child{ border-radius: 0; }
+#noty_container_top .notytheme_defaultTheme:first-child{ border-radius: 0; }
+#noty_container_bottom .notytheme_defaultTheme:last-child{ border-radius: 0; }
 
 /* Message element */
 .noty_message{
