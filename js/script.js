@@ -12,12 +12,12 @@ notes['warning'] = '<strong>Warning!</strong> <br /> Best check yo self, you\'re
 notes['confirm'] = 'Do you want to continue?';
 
 function commit_history() {
-	$.getJSON('https://api.github.com/repos/needim/noty/commits?callback=?', function(json) {
+	$.getJSON('https://api.github.com/repos/craga89/notyfy/commits?callback=?', function(json) {
 		$('#commit-history-json tr').remove();
 		$.each(json.data, function(i, data) {
 			var $col = $('<tr style="border-bottom: 1px solid #999; text-shadow: none" />');
 			var $committer = $('<td valign="top" />').html(data.commit.committer.name);
-			var $link = $('<a style="font-weight: bold" />').attr('href', 'https://github.com/needim/noty/commit/' + data.sha).html(data.commit.message);
+			var $link = $('<a style="font-weight: bold" />').attr('href', 'https://github.com/craga89/notyfy/commit/' + data.sha).html(data.commit.message);
 			var $url = $('<td />').append($link);
 			var $date = $('<td style="text-align: right" />').html($.format.date(data.commit.committer.date, "dd.MM.yy HH:MM"));
 			
@@ -33,14 +33,14 @@ function commit_history() {
 
 $(document).ready(function() {
 
-	var n = noty({
-		text: '<strong>Hi!</strong> <br /> noty v2 released! Catch me if you can!',
+	var n = notyfy({
+		text: '<strong>Hi!</strong> <br /> notyfy v2 released! Catch me if you can!',
 		type: 'warning',
 		layout: 'topLeft',
 		closeWith: ['hover'],
 		callback: {
 			afterClose: function() {
-				noty({
+				notyfy({
 					text: '<strong>Hehe!</strong> <br /> Sorry, you can catch me now.',
 					type: 'alert',
 					layout: 'topRight',
@@ -71,23 +71,23 @@ $(document).ready(function() {
 		var self = $(this);
 
 		if (self.data('layout') == 'inline') {
-			$(self.data('custom')).noty({
+			$(self.data('custom')).notyfy({
 				text: notes[self.data('type')],
 				type: self.data('type'),
 				dismissQueue: true,
 				buttons: (self.data('type') != 'confirm') ? false : [
-		    {addClass: 'btn btn-primary', text: 'Ok', onClick: function($noty) {
+		    {addClass: 'btn btn-primary', text: 'Ok', onClick: function($notyfy) {
 		    			
 		    			// this = button element
-		    			// $noty = $noty element
+		    			// $notyfy = $notyfy element
 		    	
-		    			$noty.close();
-		    			$(self.data('custom')).noty({force: true, text: 'You clicked "Ok" button', type: 'success'});
+		    			$notyfy.close();
+		    			$(self.data('custom')).notyfy({force: true, text: 'You clicked "Ok" button', type: 'success'});
 		    	}
 		    },
-		    {addClass: 'btn btn-danger', text: 'Cancel', onClick: function($noty) {
-		    		$noty.close();
-			    	$(self.data('custom')).noty({force: true, text: 'You clicked "Cancel" button', type: 'error'});
+		    {addClass: 'btn btn-danger', text: 'Cancel', onClick: function($notyfy) {
+		    		$notyfy.close();
+			    	$(self.data('custom')).notyfy({force: true, text: 'You clicked "Cancel" button', type: 'error'});
 		    	}
 		    }
 		    ]
@@ -95,24 +95,24 @@ $(document).ready(function() {
 			return false;
 		}
 
-		noty({
+		notyfy({
 			text: notes[self.data('type')],
 			type: self.data('type'),
 			dismissQueue: true,
 			layout: self.data('layout'),
 			buttons: (self.data('type') != 'confirm') ? false : [
-		    {addClass: 'btn btn-primary', text: 'Ok', onClick: function($noty) {
+		    {addClass: 'btn btn-primary', text: 'Ok', onClick: function($notyfy) {
 		    			
 		    			// this = button element
-		    			// $noty = $noty element
+		    			// $notyfy = $notyfy element
 		    	
-		    			$noty.close();
-		    			noty({force: true, text: 'You clicked "Ok" button', type: 'success', layout: self.data('layout')});
+		    			$notyfy.close();
+		    			notyfy({force: true, text: 'You clicked "Ok" button', type: 'success', layout: self.data('layout')});
 		    	}
 		    },
-		    {addClass: 'btn btn-danger', text: 'Cancel', onClick: function($noty) {
-		    		$noty.close();
-			    	noty({force: true, text: 'You clicked "Cancel" button', type: 'error', layout: self.data('layout')});
+		    {addClass: 'btn btn-danger', text: 'Cancel', onClick: function($notyfy) {
+		    		$notyfy.close();
+			    	notyfy({force: true, text: 'You clicked "Cancel" button', type: 'error', layout: self.data('layout')});
 		    	}
 		    }
 		    ]

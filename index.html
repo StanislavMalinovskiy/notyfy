@@ -1,13 +1,11 @@
 <!DOCTYPE html>
-
 <html>
 <head>
-
-	<title>notyCSS - A jQuery/CSS Notification Plugin</title>
+	<title>notyfy - Yet another jQuery notification plugin</title>
 	<meta charset="utf-8">
 	<meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1"/>
-	<meta name="description" content="noty is a jquery plugin which is have too many options for display notification" />
-	<meta name="author" content="Nedim Arabacı (http://ned.im)">
+	<meta name="description" content="notyfy is fork of the original notyfy plugin, a jQuery notification engine." />
+	<meta name="author" content="Craig Thompson (http://craigsworks.com), Nedim Arabacı (http://ned.im)">
 	<meta name="keywords" content="jquery, notification, plugin, opensource, open, source" />
 
 	<!-- Optimized mobile viewport -->
@@ -15,45 +13,37 @@
 	
 	<!-- Place favicon.ico and apple-touch-icon.png in root directory -->
 	<link href='http://fonts.googleapis.com/css?family=PT+Sans:regular,italic,bold,bolditalic&amp;subset=latin,latin-ext,cyrillic' rel='stylesheet' type='text/css'>
-	<link rel="stylesheet" href="css/fluid.css">
-	<link rel="stylesheet" href="css/buttons.css">
-	<link rel="stylesheet" href="css/twilight.css">
-	<link rel="stylesheet" href="css/font-awesome.css">
-  
+	<link rel="stylesheet" href="css/jquery.notyfy.css" />
+	<link rel="stylesheet" href="css/fluid.css" />
+	<link rel="stylesheet" href="css/buttons.css" />
+	<link rel="stylesheet" href="css/twilight.css" />
+	<link rel="stylesheet" href="css/font-awesome.css" />
 </head>
-
 <body>
 	<div class="inner">
 		<header>
 			<div class="g3 logo-cont">
-				<a class="logo" href="/noty" title="noty - a jquery notification plugin">
-					<img src="img/noty-v2-logo.png" alt="noty - a jquery notification plugin" />
+				<a class="logo" href="/notyfy" title="notyfy - Yet another jQuery notification plugin">
+					<img src="img/notyfy-v2-logo.png" alt="notyfy - Yet another jQuery notification plugin" />
 				</a>
 			</div>
 			<div class="g3">
 				<div class="top-right">
 					
 					<div class="btn-top">
-						<iframe src="http://ghbtns.com/github-btn.html?user=needim&amp;repo=noty&amp;type=watch&amp;count=true"
-	  				allowtransparency="true" frameborder="0" scrolling="0" width="110px" height="20px"></iframe>
-	  			</div>
-	  			
-	  			<div class="btn-top">
-		  			<iframe src="http://ghbtns.com/github-btn.html?user=needim&amp;repo=noty&amp;type=fork&amp;count=true"
-		  			allowtransparency="true" frameborder="0" scrolling="0" width="92px" height="20px"></iframe>
-	  			</div>
-	  			
-	  			<div class="btn-top">
-					  <iframe src="http://ghbtns.com/github-btn.html?user=needim&amp;type=follow&amp;count=true"
+						<iframe src="http://ghbtns.com/github-btn.html?user=craga89&amp;repo=notyfy&amp;type=watch&amp;count=true"
+					allowtransparency="true" frameborder="0" scrolling="0" width="110px" height="20px"></iframe>
+				</div>
+				
+				<div class="btn-top">
+					<iframe src="http://ghbtns.com/github-btn.html?user=craga89&amp;repo=notyfy&amp;type=fork&amp;count=true"
+					allowtransparency="true" frameborder="0" scrolling="0" width="92px" height="20px"></iframe>
+				</div>
+				
+				<div class="btn-top">
+					  <iframe src="http://ghbtns.com/github-btn.html?user=craga89&amp;type=follow&amp;count=true"
 					  allowtransparency="true" frameborder="0" scrolling="0" width="152px" height="20px"></iframe>
-	  			</div>
-
-	  			<div class="btn-top">
-		    		<a href="http://flattr.com/thing/529967/noty-jQuery-Notification-Plugin" target="_blank">
-						<img src="http://api.flattr.com/button/flattr-badge-large.png" alt="Flattr this" title="Flattr this" border="0" /></a>
-					</div>
-	  			
-	    	</div>
+				</div>
 			</div>
 		</header>
 		<div class="cf"></div>
@@ -67,7 +57,7 @@
 						<a href="#hi">Hi!</a>
 						<a href="#layouts">Layouts</a>
 						<a href="#installation">Installation</a>
-						<a href="#creating-a-noty">Creating a noty</a>
+						<a href="#creating-a-notyfy">Creating a notyfy</a>
 						<a href="#options">Options</a>
 						<a href="#custom-container">Custom Container</a>
 						<a href="#theme">Theme</a>
@@ -82,13 +72,13 @@
 		
 						<h4>Hi!</h4>
 						
-						<p><span class="hl">noty</span> is a jQuery plugin that makes it easy to create <span class="hl">alert</span> - <span class="hl">success</span> - <span class="hl">error</span> - <span class="hl">warning</span> - <span class="hl">information</span> - <span class="hl">confirmation</span> messages as an alternative the standard alert dialog. Each notification is added to a <span class="hl">queue</span>. (Optional)</p>
+						<p><span class="hl">notyfy</span> is a fork of the original <a href="http://needim.github.com/notyfy">notyfy</a> jQuery plugin by <a href="http://ned.im">Needim Arabacı</a>, that makes it easy to create <span class="hl">alert</span> - <span class="hl">success</span> - <span class="hl">error</span> - <span class="hl">warning</span> - <span class="hl">information</span> - <span class="hl">confirmation</span> messages as an alternative the standard alert dialog. Each notification is added to a <span class="hl">queue</span>. (Optional). <i>notyfy adds the ability to style notyfy via CSS, as well removing the need for JS-based layouts and implementing event-type callbacks.</p>
 						
 						<p>The notifications can be positioned at the; <br /> <span class="hl">top</span> - <span class="hl">topLeft</span> - <span class="hl">topCenter</span> - <span class="hl">topRight</span> - <span class="hl">center</span> - <span class="hl">centerLeft</span> - <span class="hl">centerRight</span> - <span class="hl">bottom</span> - <span class="hl">bottomLeft</span> - <span class="hl">bottomCenter</span> - <span class="hl">bottomRight</span></p>
 						
 						<p>There are lots of other options in the API to customise the text, animation, speed, buttons and much more.</p>
 						
-						<p>It also has various callbacks for the buttons, opening closing the notifications and queue control.</p>
+						<p>It also has various events for the buttons, opening closing the notifications and queue control.</p>
 						
 					</div>
 
@@ -286,12 +276,12 @@
 						Include <a href="http://docs.jquery.com/Downloading_jQuery#Current_Release">jQuery latest release</a> in your header. 
 						The Google AJAX Libraries API can be used for this but you could also host the library yourself.
 
-						<p>Download <span class="hl">noty</span> from the 
-						<a href="https://github.com/needim/noty/downloads"><i class="icon-github"></i> Github</a> and upload the files to your server.</p>
-						Include <span class="hl">noty/jquery.noty.js</span> and its dependancies below jQuery. <br />
-						Also add <span class="hl">noty/layouts/top.js</span> (you can use more layouts if you want) and <span class="hl">noty/themes/default.js</span> to your header. Or some other theme.
+						<p>Download <span class="hl">notyfy</span> from the 
+						<a href="https://github.com/craga89/notyfy/downloads"><i class="icon-github"></i> Github</a> and upload the files to your server.</p>
+						Include <span class="hl">jquery.notyfy.js</span> and its dependancies below jQuery. <br />
+						Also add <span class="hl">notyfy/layouts/top.js</span> (you can use more layouts if you want) and <span class="hl">notyfy/themes/default.js</span> to your header. Or some other theme.
 						
-						<p>noty is compatible with <span class="hl">jQuery 1.6+</span> for now. 
+						<p>notyfy is compatible with <span class="hl">jQuery 1.6+</span> for now. 
 						But if you are using older version then 1.6 you can add <span class="hl">promise.js</span> to your header. 
 						(Thanks for <a href="https://github.com/MrMaksimize" target="_blank">Maksim Pecherskiy</a>)</p>
 						
@@ -300,15 +290,8 @@
 						<pre>
 						<code data-language="html">
 &lt;script type="text/javascript" src="http://ajax.googleapis.com/ajax/libs/jquery/1.7/jquery.min.js"&gt;&lt;/script&gt;
-
-&lt;script type="text/javascript" src="js/noty/jquery.noty.js"&gt;&lt;/script&gt;
-
-&lt;script type="text/javascript" src="js/noty/layouts/top.js"&gt;&lt;/script&gt;
-&lt;script type="text/javascript" src="js/noty/layouts/topLeft.js"&gt;&lt;/script&gt;
-&lt;script type="text/javascript" src="js/noty/layouts/topRight.js"&gt;&lt;/script&gt;
-&lt;!-- You can add more layouts if you want --&gt;
-
-&lt;script type="text/javascript" src="js/noty/themes/default.js"&gt;&lt;/script&gt;
+&lt;script type="text/javascript" src="jquery.notyfy.js"&gt;&lt;/script&gt;
+&lt;script type="text/javascript" src="css/jquery.notyfy.css"&gt;&lt;/script&gt;
 						</code>
 						</pre>
 												
@@ -316,17 +299,17 @@
 
 					<div class="divider"></div>
 
-					<div id="creating-a-noty">
+					<div id="creating-a-notyfy">
 
-						<h4>Creating a noty</h4>
+						<h4>Creating a notyfy</h4>
 							
-							We wrote a helper for creating noty easily. So you can use <span class="hl">noty(properties);</span> Just like this;
+							We wrote a helper for creating notyfy easily. So you can use <span class="hl">notyfy(properties);</span> Just like this;
 							
-							<p>Returns a noty javascript object. (not jquery dom object, but you can access dom with this object)</p>
+							<p>Returns a notyfy javascript object. (not jquery dom object, but you can access dom with this object)</p>
 								
 							<pre>
 							<code data-language="javascript">
-var noty = noty({text: 'noty - a jquery notification library!'});
+var notyfy = notyfy({text: 'notyfy - Yet another jQuery notification plugin'});
 							</code>
 							</pre>
 							
@@ -342,19 +325,15 @@ var noty = noty({text: 'noty - a jquery notification library!'});
 						
 						<pre>
 						<code data-language="javascript">
-$.noty.defaults = {
+$.notyfy.defaults = {
 	layout: 'top',
 	theme: 'default',
 	type: 'alert',
 	text: '',
 	dismissQueue: true, // If you want to use queue feature set this true
-	template: '&lt;div class="noty_message"&gt;&lt;span class="noty_text"&gt;&lt;/span&gt;&lt;div class="noty_close"&gt;&lt;/div&gt;&lt;/div&gt;',
-	animation: {
-		open: {height: 'toggle'},
-		close: {height: 'toggle'},
-		easing: 'swing',
-		speed: 500 // opening &amp; closing animation speed
-	},
+	template: '&lt;div class="notyfy_message"&gt;&lt;span class="notyfy_text"&gt;&lt;/span&gt;&lt;div class="notyfy_close"&gt;&lt;/div&gt;&lt;/div&gt;',
+	showEffect:  function(bar) { bar.animate({ height: 'toggle' }, 500, 'swing'); },
+	hideEffect:  function(bar) { bar.animate({ height: 'toggle' }, 500, 'swing'); },
 	timeout: false, // delay for closing event. Set false for sticky notifications
 	force: false, // adds notification to the beginning of queue when set to true
 	modal: false,
@@ -382,7 +361,7 @@ $.noty.defaults = {
 						
 						<pre>
 						<code data-language="javascript">
-var noty = $('.custom_container').noty({text: 'noty - a jquery notification library!'});
+var notyfy = $('.custom_container').notyfy({text: 'notyfy - a jquery notification library!'});
 						</code>
 						</pre>
 						
@@ -418,16 +397,14 @@ var noty = $('.custom_container').noty({text: 'noty - a jquery notification libr
 
 						<h4>Theme (But How?)</h4>
 						
-						<p>noty is easily themable using Javascript or CSS. But my English is not enough for the explain how. :(</p> 
-						
-						<p>Theme structre is in <span class="hl">noty/themes/default.js</span> file. You can copy-paste this file and change.</p>
-						
-						<p>After that you can set your new theme with noty <span class="hl">theme property</span>. Like;</p>
+						<p>notyfyCSS is easily themable using CSS. See the <span class="hl">css/default.css</span> theme for details</p> 
+	
+						<p>After that you can set your new theme with notyfy <span class="hl">theme property</span>. Like;</p>
 						
 						<pre>
 						<code data-language="javascript">
-	var noty_id = noty({
-		text: 'noty - a jquery notification library!',
+	var notyfy_id = notyfy({
+		text: 'notyfy - a jquery notification library!',
 		theme: 'your_new_theme',
 	});
 						</code>
@@ -445,21 +422,21 @@ var noty = $('.custom_container').noty({text: 'noty - a jquery notification libr
 
 						<pre>
 						<code data-language="javascript">
-noty({
+notyfy({
 	text: 'Do you want to continue?', 
 	buttons: [
-		{addClass: 'btn btn-primary', text: 'Ok', onClick: function($noty) {
+		{addClass: 'btn btn-primary', text: 'Ok', onClick: function($notyfy) {
 
 				// this = button element
-				// $noty = $noty element
+				// $notyfy = $notyfy element
 
-				$noty.close();
-				noty({text: 'You clicked "Ok" button', type: 'success'});
+				$notyfy.close();
+				notyfy({text: 'You clicked "Ok" button', type: 'success'});
 			}
 		},
-		{addClass: 'btn btn-danger', text: 'Cancel', onClick: function($noty) {
-				$noty.close();
-				noty({text: 'You clicked "Cancel" button', type: 'error'});
+		{addClass: 'btn btn-danger', text: 'Cancel', onClick: function($notyfy) {
+				$notyfy.close();
+				notyfy({text: 'You clicked "Cancel" button', type: 'error'});
 			}
 		}
 	]
@@ -475,13 +452,13 @@ noty({
 
 						<h4>Callbacks</h4>
 
-						<p>noty have 4 callback option for now. We will add more callback asap.</p>
+						<p>notyfyCSS has 4 events that you can bind() too!</p>
 
 						<p>
-							<span class="hl">onShow</span> - 
-							<span class="hl">afterShow</span> - 
-							<span class="hl">onClose</span> - 
-							<span class="hl">afterClose</span>
+							<span class="hl">show</span> - 
+							<span class="hl">hide</span> - 
+							<span class="hl">shown</span> - 
+							<span class="hl">hidden</span>
 						</p>
 						
 					</div>
@@ -492,27 +469,27 @@ noty({
 						<h4>API</h4>
 
 						<p>
-							<span class="hl">$.noty.get(id)</span> - Returns a noty javascript object
+							<span class="hl">$.notyfy.get(id)</span> - Returns a notyfy javascript object
 						</p>
 
 						<p>
-							<span class="hl">$.noty.close(id)</span> - Close a noty - <strong>same as var n = noty({text: 'Hi!'})); n.close();</strong>
+							<span class="hl">$.notyfy.close(id)</span> - Close a notyfy - <strong>same as var n = notyfy({text: 'Hi!'})); n.close();</strong>
 						</p>
 
 						<p>
-							<span class="hl">$.noty.clearQueue()</span> - Clears the notification queue
+							<span class="hl">$.notyfy.clearQueue()</span> - Clears the notification queue
 						</p>
 
 						<p>
-							<span class="hl">$.noty.closeAll()</span> - Close all notifications
+							<span class="hl">$.notyfy.closeAll()</span> - Close all notifications
 						</p>
 
 						<p>
-							<span class="hl">$.noty.setText(id, text)</span> - Notification text updater - <strong>same as var n = noty({text: 'Hi!'})); n.setText('Hi again!');</strong>
+							<span class="hl">$.notyfy.setText(id, text)</span> - Notification text updater - <strong>same as var n = notyfy({text: 'Hi!'})); n.setText('Hi again!');</strong>
 						</p>
 
 						<p>
-							<span class="hl">$.noty.setType(id, type)</span> - Notification type updater - <strong>same as var n = noty({text: 'Hi!'})); n.setType('error');</strong>
+							<span class="hl">$.notyfy.setType(id, type)</span> - Notification type updater - <strong>same as var n = notyfy({text: 'Hi!'})); n.setType('error');</strong>
 						</p>
 
 					</div>
@@ -550,31 +527,16 @@ noty({
 	</div>
 
 	<script src="js/libs/jquery-1.7.1.min.js"></script>
-  <script src="js/libs/jquery-ui-1.8.17.easing.min.js"></script>
-  <script src="js/libs/jquery.dateFormat-1.0.js"></script>
-  <script src="js/libs/rainbow/rainbow.js"></script>
-  <script src="js/libs/rainbow/generic.js"></script>
-  <script src="js/libs/rainbow/javascript.js"></script>
-  <script src="js/libs/rainbow/html.js"></script>
+	<script src="js/libs/jquery-ui-1.8.17.easing.min.js"></script>
+	<script src="js/libs/jquery.dateFormat-1.0.js"></script>
+	<script src="js/libs/rainbow/rainbow.js"></script>
+	<script src="js/libs/rainbow/generic.js"></script>
+	<script src="js/libs/rainbow/javascript.js"></script>
+	<script src="js/libs/rainbow/html.js"></script>
 
-  <script src="js/noty/jquery.noty.js"></script>
+	<script src="jquery.notyfy.js"></script>
 
-  <script src="js/noty/layouts/bottom.js"></script>
-  <script src="js/noty/layouts/bottomCenter.js"></script>
-  <script src="js/noty/layouts/bottomLeft.js"></script>
-  <script src="js/noty/layouts/bottomRight.js"></script>
-  <script src="js/noty/layouts/center.js"></script>
-  <script src="js/noty/layouts/centerLeft.js"></script>
-  <script src="js/noty/layouts/centerRight.js"></script>
-  <script src="js/noty/layouts/inline.js"></script>
-  <script src="js/noty/layouts/top.js"></script>
-  <script src="js/noty/layouts/topCenter.js"></script>
-  <script src="js/noty/layouts/topLeft.js"></script>
-  <script src="js/noty/layouts/topRight.js"></script>
-
-  <script src="js/noty/themes/default.js"></script>
-
-  <script defer src="js/script.js"></script>
+	<script defer src="js/script.js"></script>
 
 	<!-- HTML5 IE Enabling Script -->
 	<!--[if lt IE 9]><script src="http://html5shim.googlecode.com/svn/trunk/html5.js"></script><![endif]-->
@@ -585,13 +547,13 @@ noty({
 	<script type="text/javascript">
 
 	  var _gaq = _gaq || [];
-	  _gaq.push(['_setAccount', 'UA-28737816-1']);
-	  _gaq.push(['_trackPageview']);
+	  _gaq.push(['_setAccount', 'UA-5228245-12']);
+	  _gaq.push(['_trackPageview']);s
 
 	  (function() {
-	    var ga = document.createElement('script'); ga.type = 'text/javascript'; ga.async = true;
-	    ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js';
-	    var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);
+		var ga = document.createElement('script'); ga.type = 'text/javascript'; ga.async = true;
+		ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js';
+		var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);
 	  })();
 
 	</script>
