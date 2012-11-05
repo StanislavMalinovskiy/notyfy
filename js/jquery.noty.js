@@ -16,9 +16,14 @@
 
 		$.extend(self, {
 			container: $('#noty_container_'+options.layout),
-
 			closed: false,
 			shown: false,
+
+			_triggerEvent: function(type, args) {
+				var callback = $.Event('noty'+type);
+				self.wrapper.trigger(callback, [self].concat(args || []));
+				return !callback.isDefaultPrevented();
+			},
 
 			_generateID: function() {
 				var id; do{
@@ -34,9 +39,9 @@
 				// Mix in the passed in options with the default options
 				self.options = $.extend({}, $.noty.defaults, { id: self._generateID() }, options);
 
-				// Generate noty container if needed
+				// Generate noty container ifneeded
 				if(!self.container.length) {
-					// Use custom container if provided
+					// Use custom container ifprovided
 					if(options.custom) {
 						self.container = options.custom.addClass('noty_container_inline');
 					}
@@ -89,8 +94,8 @@
 				// Apply theme class
 				if(self.options.theme) { self.wrapper.addClass('notytheme_'+self.options.theme); }
 
-				// Set buttons if available
-				if (self.options.buttons) {
+				// Set buttons ifavailable
+				if(self.options.buttons) {
 					self.options.closeWith = [];
 					self.options.timeout = false;
 
@@ -104,7 +109,7 @@
 								'class': button.addClass || 'gray',
 								'html': button.text,
 								'click': function() {
-									if ($.isFunction(button.onClick)) {
+									if($.isFunction(button.onClick)) {
 										button.onClick.call( $(this), self );
 									}
 								}
@@ -112,6 +117,13 @@
 						})
 					);
 				}
+
+				// Attach events
+				$.each(self.options.events, function(event, callback) {
+					if($.isFunction(callback)) {
+						self.wrapper.bind('noty'+callback, callback);
+					}
+				})
 
 				// For easy access
 				self.message = self.wrapper.find('.noty_message');
@@ -121,10 +133,11 @@
 				$.noty.store[self.options.id] = self;
 			},
 
-			show: function() {
+			show: function(event) {
 				// Append the container
 				self.wrapper.appendTo(self.container);
 
+				// Add close handlers to noty/buttons
 				if($.inArray('click', self.options.closeWith) > -1) {
 					self.wrapper.css('cursor', 'pointer').one('click', self.close);
 				}
@@ -138,95 +151,98 @@
 					self.closeButton.remove();
 				}
 
-				if(self.options.callback.onShow) {
-					self.options.callback.onShow.apply(self);
-				}
+				// Trigger show event
+				self._triggerEvent('show', [ self ]);
 
+				// After-animation methods
 				function after() {
-					if (self.options.callback.afterShow) self.options.callback.afterShow.apply(self);
+					self._triggerEvent('visible', [ self ]);
 					self.shown = true;
 				}
 
-				if ($.isFunction(self.options.showEffect)) {
+				// If an animation method was passed, use it and queue after()
+				if($.isFunction(self.options.showEffect)) {
 					self.wrapper.clearQueue().stop();
 					self.options.showEffect.call(self, self.wrapper);
 					self.wrapper.queue(after);
 				}
+
+				// Otherwise just invoke show() and after()
 				else { self.wrapper.show(); after(); }
 
 				// If noty is have a timeout option
-				if (self.options.timeout)
-					self.wrapper.delay(self.options.timeout).promise().done(function () {
+				if(self.options.timeout) {
+					clearTimeout(self._delay);
+					self._delay = setTimeout(function() {
 						self.close();
-					});
+					}, parseInt(self.options.timeout, 10));
+				}
 
 				return self;
 
-			}, // end show
+			},
 
-			close:function () {
-				if (self.closed) return;
+			close: function(event) {
+				if(self.closed) return;
 
-				if (!self.shown) { // If we are still waiting in the queue just delete from queue
-					var queue = [];
-					$.each($.noty.queue, function (i, n) {
-						if (n.options.id != self.options.id) {
-							queue.push(n);
+				// If we are still waiting in the queue just delete from queue
+				if(!self.shown) {
+					$.noty.queue = $.map($.noty.queue, function(n ,i) {
+						if(n.options.id != self.options.id) {
+							return n;
 						}
 					});
-					$.noty.queue = queue;
 					return;
 				}
 
+				// Add closing class
 				self.wrapper.addClass('i-am-closing-now');
 
-				if (self.options.callback.onClose) {
-					self.options.callback.onClose.apply(self);
-				}
+				// Trigger hide event
+				self._triggerEvent('hid', [ self ]);
 
 				function after() {
-					if (self.options.callback.afterClose) self.options.callback.afterClose.apply(self);
+					// Trigger hidden event
+					self._triggerEvent('hidden', [ self ]);
 
 					// Modal Cleaning
-					if (self.options.modal) {
-						$.notyRenderer.setModalCount(-1);
-						if ($.notyRenderer.getModalCount() == 0) $('.noty_modal').fadeOut('fast', function () {
-							$(self).remove();
-						});
-					}
+					if(self.options.modal) { renderer.hideModalFor(self); }
 
 					// Layout Cleaning
-					$.notyRenderer.setLayoutCountFor(self, -1);
-					if ($.notyRenderer.getLayoutCountFor(self) == 0) self.wrapper.remove();
+					renderer.setLayoutCountFor(self, -1);
+					if(renderer.getLayoutCountFor(self) == 0) { self.wrapper.remove(); }
 
 					// Make sure self.wrapper has not been removed before attempting to remove it
-					if (typeof self.wrapper !== 'undefined' && self.wrapper !== null ) {
+					if(typeof self.wrapper !== 'undefined' && self.wrapper !== null) {
 						self.wrapper.remove();
 						self.wrapper = null;
 						self.closed = true;
 					}
 
-					delete $.noty.store[self.options.id]; // deleting noty from store
+					// Delete noty reference from store
+					delete $.noty.store[self.options.id]; 
 
-					if (!self.options.dismissQueue) {
-						// Queue render
+					// Queue render
+					if(!self.options.dismissQueue) {
 						$.noty.ontap = true;
-
-						$.notyRenderer.render();
+						renderer.render();
 					}
 				}
 
-				if ($.isFunction(self.options.hideEffect)) {
+				// If an animation method was passed, use it and queue after()
+				if($.isFunction(self.options.hideEffect)) {
 					self.wrapper.clearQueue().stop();
 					self.options.hideEffect.call(self, self.wrapper);
 					self.wrapper.queue(after);
 				}
+
+				// Otherwise just invoke show() and after()
 				else { self.wrapper.hide(); after(); }
 
 			},
 
 			setText: function(text) {
-				if (!self.closed) {
+				if(!self.closed) {
 					self.options.text = text;
 					self.wrapper.find('.noty_text').html(text);
 				}
@@ -234,7 +250,7 @@
 			},
 
 			setType: function(type) {
-				if (!self.closed) {
+				if(!self.closed) {
 					self.options.type = type;
 				}
 				return self;
@@ -244,15 +260,22 @@
 		self.init();
 	};
 
-	$.notyRenderer = {
-		init: function(options) {
+	var renderer = $.notyRenderer = {
+		_modal: $('<div/>', {
+			'id': 'noty_modal', 
+			'data': { 'noty_modal_count': 0 } 
+		}),
+		_modals: 0,
 
-			// Renderer creates a new noty
+		init: function(options) {
+			// Create new Noty
 			var noty = new NotyObject(options);
 
+			// Add it to the frontback of the queue depending on options
 			$.noty.queue[noty.options.force ? 'unshift' : 'push'](noty);
 
-			$.notyRenderer.render();
+			// Render the noty
+			renderer.render();
 
 			return ($.noty.returns == 'object') ? noty : noty.options.id;
 		},
@@ -260,36 +283,45 @@
 		render: function() {
 			var instance = $.noty.queue[0];
 
-			if ($.type(instance) === 'object') {
-				if (instance.options.dismissQueue) {
-					$.notyRenderer.show($.noty.queue.shift());
+			if($.type(instance) === 'object') {
+				if(instance.options.dismissQueue) {
+					renderer.show($.noty.queue.shift());
 				} else {
-					if ($.noty.ontap) {
-						$.notyRenderer.show($.noty.queue.shift());
+					if($.noty.ontap) {
+						renderer.show($.noty.queue.shift());
 						$.noty.ontap = false;
 					}
 				}
-			} else {
-				$.noty.ontap = true; // Queue is over
 			}
 
+			// Queue is over
+			else { $.noty.ontap = true; }
 		},
 
 		show: function(noty) {
 			if(noty.options.modal) {
-				$.notyRenderer.createModalFor(noty);
-				$.notyRenderer.setModalCount(+1);
+				renderer.createModalFor(noty);
+				renderer.setModalCount(+1);
 			}
 
-			$.notyRenderer.setLayoutCountFor(noty, +1);
+			renderer.setLayoutCountFor(noty, +1);
 
 			noty.show();
 		},
 
 		createModalFor: function(noty) {
-			if ($('.noty_modal').length == 0) {
-				var modal = $('<div/>').addClass('noty_modal').data('noty_modal_count', 0).prependTo($('body')).fadeIn('fast');
-				if(noty.options.theme) { modal.addClass('notytheme_'+noty.options.theme); }
+			if(!renderer._modal[0].parentNode) {
+				renderer._modal.prependTo(document.body).fadeIn('fast');
+			}
+		},
+
+		hideModalFor: function(noty) {
+			renderer.setModalCount(-1);
+
+			if(renderer.getModalCount() == 0) {
+				renderer._modal.fadeOut('fast', function() {
+					renderer._modal.detach();
+				});
 			}
 		},
 
@@ -298,16 +330,11 @@
 		},
 
 		setLayoutCountFor: function(noty, arg) {
-			return noty.container.data('noty_layout_count', $.notyRenderer.getLayoutCountFor(noty) + arg);
+			return noty.container.data('noty_layout_count', renderer.getLayoutCountFor(noty) + arg);
 		},
 
-		getModalCount: function() {
-			return $('.noty_modal').data('noty_modal_count') || 0;
-		},
-
-		setModalCount: function(arg) {
-			return $('.noty_modal').data('noty_modal_count', $.notyRenderer.getModalCount() + arg);
-		}
+		getModalCount: function() { return renderer._modals; },
+		setModalCount: function(arg) { return (renderer._modals += arg); }
 	};
 
 	var win = $(window);
@@ -336,42 +363,42 @@
 		ontap: true,
 		returns: 'object',
 
-		get: function (id) {
+		get: function(id) {
 			return $.noty.store.hasOwnProperty(id) ? $.noty.store[id] : false;
 		},
 
-		close: function (id) {
+		close: function(id) {
 			return $.noty.get(id) ? $.noty.get(id).close() : false;
 		},
 
-		setText: function (id, text) {
+		setText: function(id, text) {
 			return $.noty.get(id) ? $.noty.get(id).setText(text) : false;
 		},
 
-		setType: function (id, type) {
+		setType: function(id, type) {
 			return $.noty.get(id) ? $.noty.get(id).setType(type) : false;
 		},
 
-		clearQueue: function () {
+		clearQueue: function() {
 			$.noty.queue = [];
 		},
 
-		closeAll: function () {
+		closeAll: function() {
 			$.noty.clearQueue();
-			$.each($.noty.store, function (id, noty) {
+			$.each($.noty.store, function(id, noty) {
 				noty.close();
 			});
 		},
 
-		consumeAlert: function (options) {
-			window.alert = function (text) {
-				if (options) {
+		consumeAlert: function(options) {
+			window.alert = function(text) {
+				if(options) {
 					options.text = text;
 				}
 				else {
 					options = { text: text };
 				}
-				$.notyRenderer.init(options);
+				renderer.init(options);
 			};
 		},
 
@@ -393,24 +420,24 @@
 			modal: false,
 			buttons: false,
 			closeWith: ['click'],
-			callback: {
-				onShow: $.noop,
-				afterShow: $.noop,
-				onClose: $.noop,
-				afterClose: $.noop
+			events: {
+				show: null,
+				hide: null,
+				shown: null,
+				hidden: null
 			}
 		}
 	};
 
 	// Helper method
 	window.noty = function(options) {
-		return $.notyRenderer.init(options);
+		return renderer.init(options);
 	}
 
 	// This is for custom container
-	$.fn.noty = function (options) {
+	$.fn.noty = function(options) {
 		options.custom = $(this);
-		return $.notyRenderer.init(options);
+		return renderer.init(options);
 	};
 
 })(jQuery);
