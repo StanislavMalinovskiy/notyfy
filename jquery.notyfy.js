@@ -1,33 +1,33 @@
 /**
- * noty - jQuery Notification Plugin v2.0.3
- * Contributors: https://github.com/needim/noty/graphs/contributors
+ * notyfy - Yet another jQuery Notification Plugin v
+ * 
+ * Based on the original notyfy plugin: https://needim.github.com/notyfy/
  *
- * Examples and Documentation - http://needim.github.com/noty/
+ * Examples and Documentation - http://craga89.github.com/notyfy/
  *
  * Licensed under the MIT licenses:
  * http://www.opensource.org/licenses/mit-license.php
  *
  **/
-
 (function($) {
 
-	function NotyObject(options) {
+	function NotyfyObject(options) {
 		var self = this;
 
 		$.extend(self, {
-			container: $('#noty_container_'+options.layout),
+			container: $('#notyfy_container_'+options.layout),
 			closed: false,
 			shown: false,
 
 			_triggerEvent: function(type, args) {
-				var callback = $.Event('noty'+type);
+				var callback = $.Event('notyfy'+type);
 				self.wrapper.trigger(callback, [self].concat(args || []));
 				return !callback.isDefaultPrevented();
 			},
 
 			_generateID: function() {
 				var id; do{
-					id = 'noty_' + (new Date().getTime() * Math.floor(Math.random() * 1000000)); 
+					id = 'notyfy_' + (new Date().getTime() * Math.floor(Math.random() * 1000000)); 
 				}
 				while(document.getElementById(id));
 				return id;
@@ -37,26 +37,26 @@
 				var adjuster;
 
 				// Mix in the passed in options with the default options
-				self.options = $.extend({}, $.noty.defaults, { id: self._generateID() }, options);
+				self.options = $.extend({}, $.notyfy.defaults, { id: self._generateID() }, options);
 
-				// Generate noty container ifneeded
+				// Generate notyfy container ifneeded
 				if(!self.container.length) {
 					// Use custom container ifprovided
 					if(options.custom) {
-						self.container = options.custom.addClass('noty_container_inline');
+						self.container = options.custom.addClass('notyfy_container_inline');
 					}
 
 					// Otherwise create one using jQuery
 					else {
 						self.container = $('<ul />', {
-							'id': 'noty_container_'+self.options.layout,
-							'class': 'noty_container'
+							'id': 'notyfy_container_'+self.options.layout,
+							'class': 'notyfy_container'
 						})
 						.appendTo(self.options.custom || document.body);
 					}
 
 					// Apply any layout adjuters on window resize
-					if((adjuster = $.noty.layouts[self.options.layout])) {
+					if((adjuster = $.notyfy.layouts[self.options.layout])) {
 						$(window).bind('resize.'+self.options.id, function(event) {
 							adjuster.call(self.container);
 						})
@@ -70,29 +70,29 @@
 				// Not needed? Remove new class
 				else { self.container.removeClass('i-am-new'); }
 
-				// Build the noty dom initial structure
+				// Build the notyfy dom initial structure
 				self._build();
 
 				return self;
 			}, 
 
 		 	_build: function() {
-				// Generate noty bar
+				// Generate notyfy bar
 				var bar = $('<div />', {
 					'id': self.options.id,
-					'class': "noty_bar",
+					'class': "notyfy_bar",
 				})
 				.append(self.options.template)
-				.find('.noty_text')
+				.find('.notyfy_text')
 				.html(self.options.text).end();
 
-				// Generate noty container
+				// Generate notyfy container
 				self.wrapper = $('<li />', {
-					'class': ['noty_wrapper', 'noty_'+self.options.type].join(' '),
+					'class': ['notyfy_wrapper', 'notyfy_'+self.options.type].join(' '),
 				}).hide().append(bar);
 
 				// Apply theme class
-				if(self.options.theme) { self.wrapper.addClass('notytheme_'+self.options.theme); }
+				if(self.options.theme) { self.wrapper.addClass('notyfytheme_'+self.options.theme); }
 
 				// Set buttons ifavailable
 				if(self.options.buttons) {
@@ -100,9 +100,9 @@
 					self.options.timeout = false;
 
 					self.buttons = $('<div/>', {
-						'class': 'noty_buttons'
+						'class': 'notyfy_buttons'
 					})
-					.appendTo( $('.noty_bar', self.wrapper) )
+					.appendTo( $('.notyfy_bar', self.wrapper) )
 					.append(
 						$.map(self.options.buttons, function(button, i) {
 							return $('<button/>', {
@@ -121,23 +121,23 @@
 				// Attach events
 				$.each(self.options.events, function(event, callback) {
 					if($.isFunction(callback)) {
-						self.wrapper.bind('noty'+event, callback);
+						self.wrapper.bind('notyfy'+event, callback);
 					}
 				})
 
 				// For easy access
-				self.message = self.wrapper.find('.noty_message');
-				self.closeButton = self.wrapper.find('.noty_close');
+				self.message = self.wrapper.find('.notyfy_message');
+				self.closeButton = self.wrapper.find('.notyfy_close');
 
-				// store noty for api
-				$.noty.store[self.options.id] = self;
+				// store notyfy for api
+				$.notyfy.store[self.options.id] = self;
 			},
 
 			show: function(event) {
 				// Append the container
 				self.wrapper.appendTo(self.container);
 
-				// Add close handlers to noty/buttons
+				// Add close handlers to notyfy/buttons
 				if($.inArray('click', self.options.closeWith) > -1) {
 					self.wrapper.css('cursor', 'pointer').one('click', self.close);
 				}
@@ -170,7 +170,7 @@
 				// Otherwise just invoke show() and after()
 				else { self.wrapper.show(); after(); }
 
-				// If noty is have a timeout option
+				// If notyfy is have a timeout option
 				if(self.options.timeout) {
 					clearTimeout(self._delay);
 					self._delay = setTimeout(function() {
@@ -187,7 +187,7 @@
 
 				// If we are still waiting in the queue just delete from queue
 				if(!self.shown) {
-					$.noty.queue = $.map($.noty.queue, function(n ,i) {
+					$.notyfy.queue = $.map($.notyfy.queue, function(n ,i) {
 						if(n.options.id != self.options.id) {
 							return n;
 						}
@@ -219,12 +219,12 @@
 						self.closed = true;
 					}
 
-					// Delete noty reference from store
-					delete $.noty.store[self.options.id]; 
+					// Delete notyfy reference from store
+					delete $.notyfy.store[self.options.id]; 
 
 					// Queue render
 					if(!self.options.dismissQueue) {
-						$.noty.ontap = true;
+						$.notyfy.ontap = true;
 						renderer.render();
 					}
 				}
@@ -244,7 +244,7 @@
 			setText: function(text) {
 				if(!self.closed) {
 					self.options.text = text;
-					self.wrapper.find('.noty_text').html(text);
+					self.wrapper.find('.notyfy_text').html(text);
 				}
 				return self;
 			},
@@ -260,62 +260,62 @@
 		self.init();
 	};
 
-	var renderer = $.notyRenderer = {
+	var renderer = $.notyfyRenderer = {
 		_modal: $('<div/>', {
-			'id': 'noty_modal', 
-			'data': { 'noty_modal_count': 0 } 
+			'id': 'notyfy_modal', 
+			'data': { 'notyfy_modal_count': 0 } 
 		}),
 		_modals: 0,
 
 		init: function(options) {
 			// Create new Noty
-			var noty = new NotyObject(options);
+			var notyfy = new NotyfyObject(options);
 
 			// Add it to the frontback of the queue depending on options
-			$.noty.queue[noty.options.force ? 'unshift' : 'push'](noty);
+			$.notyfy.queue[notyfy.options.force ? 'unshift' : 'push'](notyfy);
 
-			// Render the noty
+			// Render the notyfy
 			renderer.render();
 
-			return ($.noty.returns == 'object') ? noty : noty.options.id;
+			return notyfy;
 		},
 
 		render: function() {
-			var instance = $.noty.queue[0];
+			var instance = $.notyfy.queue[0];
 
 			if($.type(instance) === 'object') {
 				if(instance.options.dismissQueue) {
-					renderer.show($.noty.queue.shift());
+					renderer.show($.notyfy.queue.shift());
 				} else {
-					if($.noty.ontap) {
-						renderer.show($.noty.queue.shift());
-						$.noty.ontap = false;
+					if($.notyfy.ontap) {
+						renderer.show($.notyfy.queue.shift());
+						$.notyfy.ontap = false;
 					}
 				}
 			}
 
 			// Queue is over
-			else { $.noty.ontap = true; }
+			else { $.notyfy.ontap = true; }
 		},
 
-		show: function(noty) {
-			if(noty.options.modal) {
-				renderer.createModalFor(noty);
+		show: function(notyfy) {
+			if(notyfy.options.modal) {
+				renderer.createModalFor(notyfy);
 				renderer.setModalCount(+1);
 			}
 
-			renderer.setLayoutCountFor(noty, +1);
+			renderer.setLayoutCountFor(notyfy, +1);
 
-			noty.show();
+			notyfy.show();
 		},
 
-		createModalFor: function(noty) {
+		createModalFor: function(notyfy) {
 			if(!renderer._modal[0].parentNode) {
 				renderer._modal.prependTo(document.body).fadeIn('fast');
 			}
 		},
 
-		hideModalFor: function(noty) {
+		hideModalFor: function(notyfy) {
 			renderer.setModalCount(-1);
 
 			if(renderer.getModalCount() == 0) {
@@ -325,12 +325,12 @@
 			}
 		},
 
-		getLayoutCountFor: function(noty) {
-			return noty.container.data('noty_layout_count') || 0;
+		getLayoutCountFor: function(notyfy) {
+			return notyfy.container.data('notyfy_layout_count') || 0;
 		},
 
-		setLayoutCountFor: function(noty, arg) {
-			return noty.container.data('noty_layout_count', renderer.getLayoutCountFor(noty) + arg);
+		setLayoutCountFor: function(notyfy, arg) {
+			return notyfy.container.data('notyfy_layout_count', renderer.getLayoutCountFor(notyfy) + arg);
 		},
 
 		getModalCount: function() { return renderer._modals; },
@@ -339,7 +339,8 @@
 
 	var win = $(window);
 
-	$.noty = {
+	$.notyfy = {
+		ontap: true,
 		queue: [],
 		store: {},
 		layouts: {
@@ -360,33 +361,31 @@
 				this[0].style.left = (win.width() / 2 - this.outerWidth() / 2) + 'px';
 			}
 		},
-		ontap: true,
-		returns: 'object',
 
 		get: function(id) {
-			return $.noty.store.hasOwnProperty(id) ? $.noty.store[id] : false;
+			return $.notyfy.store.hasOwnProperty(id) ? $.notyfy.store[id] : false;
 		},
 
 		close: function(id) {
-			return $.noty.get(id) ? $.noty.get(id).close() : false;
+			return $.notyfy.get(id) ? $.notyfy.get(id).close() : false;
 		},
 
 		setText: function(id, text) {
-			return $.noty.get(id) ? $.noty.get(id).setText(text) : false;
+			return $.notyfy.get(id) ? $.notyfy.get(id).setText(text) : false;
 		},
 
 		setType: function(id, type) {
-			return $.noty.get(id) ? $.noty.get(id).setType(type) : false;
+			return $.notyfy.get(id) ? $.notyfy.get(id).setType(type) : false;
 		},
 
 		clearQueue: function() {
-			$.noty.queue = [];
+			$.notyfy.queue = [];
 		},
 
 		closeAll: function() {
-			$.noty.clearQueue();
-			$.each($.noty.store, function(id, noty) {
-				noty.close();
+			$.notyfy.clearQueue();
+			$.each($.notyfy.store, function(id, notyfy) {
+				notyfy.close();
 			});
 		},
 
@@ -412,7 +411,7 @@
 			type: 'alert',
 			text: '',
 			dismissQueue: true,
-			template: '<div class="noty_message"><span class="noty_text"></span><div class="noty_close"></div></div>',
+			template: '<div class="notyfy_message"><span class="notyfy_text"></span><div class="notyfy_close"></div></div>',
 			showEffect:  function(bar) { bar.animate({ height: 'toggle' }, 500, 'swing'); },
 			hideEffect:  function(bar) { bar.animate({ height: 'toggle' }, 500, 'swing'); },
 			timeout: false,
@@ -430,12 +429,12 @@
 	};
 
 	// Helper method
-	window.noty = function(options) {
+	window.notyfy = function(options) {
 		return renderer.init(options);
 	}
 
 	// This is for custom container
-	$.fn.noty = function(options) {
+	$.fn.notyfy = function(options) {
 		options.custom = $(this);
 		return renderer.init(options);
 	};

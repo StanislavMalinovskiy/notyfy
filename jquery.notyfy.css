@@ -1,4 +1,4 @@
-.noty_container{
+.notyfy_container{
 	position: fixed;
 	height: auto;
 	margin: 0;
@@ -9,7 +9,7 @@
 	z-index: 10000;
 }
 
-.noty_container_inline{
+.notyfy_container_inline{
 	position: relative;
 	width: auto;
 	height: auto;
@@ -17,22 +17,22 @@
 	list-style-type: none;
 }
 
-#noty_container_top{ top: 0; left: 5%; width: 90%; }
-#noty_container_bottom{ bottom: 0; left: 5%; width: 90%; }
+#notyfy_container_top{ top: 0; left: 5%; width: 90%; }
+#notyfy_container_bottom{ bottom: 0; left: 5%; width: 90%; }
 
-#noty_container_topRight{ top: 20px; right: 20px; }
-#noty_container_topLeft{ top: 20px; left: 20px; }
-#noty_container_bottomRight{ bottom: 20px; right: 20px; }
-#noty_container_bottomLeft{ bottom: 20px; left: 20px; }
+#notyfy_container_topRight{ top: 20px; right: 20px; }
+#notyfy_container_topLeft{ top: 20px; left: 20px; }
+#notyfy_container_bottomRight{ bottom: 20px; right: 20px; }
+#notyfy_container_bottomLeft{ bottom: 20px; left: 20px; }
 
-#noty_container_topCenter{ top: 20px; left: 50%;  }
-#noty_container_bottomCenter{ bottom: 20px; left: 50%; }
+#notyfy_container_topCenter{ top: 20px; left: 50%;  }
+#notyfy_container_bottomCenter{ bottom: 20px; left: 50%; }
 
-#noty_container_center{ top: 50%; left: 50%; }
-#noty_container_centerLeft{ left: 20px; top: 50%; }
-#noty_container_centerRight{ right: 20px; top: 50%; }
+#notyfy_container_center{ top: 50%; left: 50%; }
+#notyfy_container_centerLeft{ left: 20px; top: 50%; }
+#notyfy_container_centerRight{ right: 20px; top: 50%; }
 
-#noty_modal{
+#notyfy_modal{
 	position: fixed;
 	display: none;
 	width: 100%;
