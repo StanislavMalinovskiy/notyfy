@@ -34,12 +34,12 @@ function commit_history() {
 $(document).ready(function() {
 
 	var n = notyfy({
-		text: '<strong>Hi!</strong> <br /> notyfy v2 released! Catch me if you can!',
+		text: '<strong>Hi!</strong> <br /> notyfy released! Catch me if you can!',
 		type: 'warning',
 		layout: 'topLeft',
 		closeWith: ['hover'],
-		callback: {
-			afterClose: function() {
+		events: {
+			hidden: function() {
 				notyfy({
 					text: '<strong>Hehe!</strong> <br /> Sorry, you can catch me now.',
 					type: 'alert',
@@ -75,22 +75,17 @@ $(document).ready(function() {
 				text: notes[self.data('type')],
 				type: self.data('type'),
 				dismissQueue: true,
-				buttons: (self.data('type') != 'confirm') ? false : [
-		    {addClass: 'btn btn-primary', text: 'Ok', onClick: function($notyfy) {
-		    			
-		    			// this = button element
-		    			// $notyfy = $notyfy element
-		    	
-		    			$notyfy.close();
-		    			$(self.data('custom')).notyfy({force: true, text: 'You clicked "Ok" button', type: 'success'});
-		    	}
-		    },
-		    {addClass: 'btn btn-danger', text: 'Cancel', onClick: function($notyfy) {
-		    		$notyfy.close();
-			    	$(self.data('custom')).notyfy({force: true, text: 'You clicked "Cancel" button', type: 'error'});
-		    	}
-		    }
-		    ]
+				buttons: (self.data('type') != 'confirm') ? false : [{
+					addClass: 'btn btn-primary', text: 'Ok', onClick: function($notyfy) {
+						$notyfy.close();
+						$(self.data('custom')).notyfy({force: true, text: 'You clicked "Ok" button', type: 'success'});
+					}
+				}, {
+					addClass: 'btn btn-danger', text: 'Cancel', onClick: function($notyfy) {
+						$notyfy.close();
+						$(self.data('custom')).notyfy({force: true, text: 'You clicked "Cancel" button', type: 'error'});
+					}
+				}]
 			});
 			return false;
 		}
@@ -100,22 +95,18 @@ $(document).ready(function() {
 			type: self.data('type'),
 			dismissQueue: true,
 			layout: self.data('layout'),
-			buttons: (self.data('type') != 'confirm') ? false : [
-		    {addClass: 'btn btn-primary', text: 'Ok', onClick: function($notyfy) {
-		    			
-		    			// this = button element
-		    			// $notyfy = $notyfy element
-		    	
-		    			$notyfy.close();
-		    			notyfy({force: true, text: 'You clicked "Ok" button', type: 'success', layout: self.data('layout')});
-		    	}
-		    },
-		    {addClass: 'btn btn-danger', text: 'Cancel', onClick: function($notyfy) {
-		    		$notyfy.close();
-			    	notyfy({force: true, text: 'You clicked "Cancel" button', type: 'error', layout: self.data('layout')});
-		    	}
-		    }
-		    ]
+			buttons: (self.data('type') != 'confirm') ? false : [{
+				addClass: 'btn btn-primary', text: 'Ok', onClick: function($notyfy) {
+					$notyfy.close();
+					notyfy({force: true, text: 'You clicked "Ok" button', type: 'success', layout: self.data('layout')});
+				}
+			},
+			{
+				addClass: 'btn btn-danger', text: 'Cancel', onClick: function($notyfy) {
+					$notyfy.close();
+					notyfy({force: true, text: 'You clicked "Cancel" button', type: 'error', layout: self.data('layout')});
+				}
+			}]
 		});
 		return false;
 	});
