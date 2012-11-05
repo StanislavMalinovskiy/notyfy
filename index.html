@@ -78,7 +78,7 @@
 					</div>
 
 					<div class="divider"></div>
-					
+
 					<div id="hi">
 						<h4>Hi!</h4>
 
@@ -302,6 +302,9 @@
 &lt;script type="text/javascript" src="http://ajax.googleapis.com/ajax/libs/jquery/1.7/jquery.min.js"&gt;&lt;/script&gt;
 &lt;script type="text/javascript" src="jquery.notyfy.js"&gt;&lt;/script&gt;
 &lt;script type="text/javascript" src="css/jquery.notyfy.css"&gt;&lt;/script&gt;
+
+<!-- include a theme -->
+&lt;script type="text/javascript" src="css/themes/default.css"&gt;&lt;/script&gt;
 						</code>
 						</pre>
 												
@@ -348,11 +351,11 @@ $.notyfy.defaults = {
 	force: false, // adds notification to the beginning of queue when set to true
 	modal: false,
 	closeWith: ['click'], // ['click', 'button', 'hover']
-	callback: {
-		onShow: function() {},
-		afterShow: function() {},
-		onClose: function() {},
-		afterClose: function() {}
+	events: {
+		show: null,
+		hide: null,
+		shown: null,
+		hidden: null
 	},
 	buttons: false // an array of buttons
 };
@@ -407,7 +410,7 @@ var notyfy = $('.custom_container').notyfy({text: 'notyfy - a jquery notificatio
 
 						<h4>Theme (But How?)</h4>
 						
-						<p>notyfyCSS is easily themable using CSS. See the <span class="hl">css/default.css</span> theme for details</p> 
+						<p>notyfyCSS is easily themable using CSS. See the <span class="hl">themes/default.css</span> theme for details</p> 
 	
 						<p>After that you can set your new theme with notyfy <span class="hl">theme property</span>. Like;</p>
 						
@@ -434,22 +437,24 @@ var notyfy = $('.custom_container').notyfy({text: 'notyfy - a jquery notificatio
 						<code data-language="javascript">
 notyfy({
 	text: 'Do you want to continue?', 
-	buttons: [
-		{addClass: 'btn btn-primary', text: 'Ok', onClick: function($notyfy) {
-
+	buttons: [{
+		addClass: 'btn btn-primary',
+		text: 'Ok',
+		onClick: function($notyfy) {
 				// this = button element
 				// $notyfy = $notyfy element
 
 				$notyfy.close();
 				notyfy({text: 'You clicked "Ok" button', type: 'success'});
-			}
-		},
-		{addClass: 'btn btn-danger', text: 'Cancel', onClick: function($notyfy) {
-				$notyfy.close();
-				notyfy({text: 'You clicked "Cancel" button', type: 'error'});
-			}
 		}
-	]
+	}, {
+		addClass: 'btn btn-danger',
+		text: 'Cancel',
+		onClick: function($notyfy) {
+			$notyfy.close();
+			notyfy({text: 'You clicked "Cancel" button', type: 'error'});
+		}
+	}]
 });
 						</code>
 						</pre>
@@ -462,7 +467,7 @@ notyfy({
 
 						<h4>Callbacks</h4>
 
-						<p>notyfyCSS has 4 events that you can bind() too!</p>
+						<p>notyfyCSS has 4 events that you can <a href="http://api.jquery.com/bind">bind()</a> too!</p>
 
 						<p>
 							<span class="hl">show</span> - 
