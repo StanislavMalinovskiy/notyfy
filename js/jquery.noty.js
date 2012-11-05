@@ -36,11 +36,19 @@
 
 				// Generate noty container if needed
 				if(!self.container.length) {
-					self.container = $('<ul />', {
-						'id': 'noty_container_'+self.options.layout,
-						'class': 'noty_container i-am-new'
-					})
-					.appendTo(self.options.custom || document.body);
+					// Use custom container if provided
+					if(options.custom) {
+						self.container = options.custom.addClass('noty_container_inline');
+					}
+
+					// Otherwise create one using jQuery
+					else {
+						self.container = $('<ul />', {
+							'id': 'noty_container_'+self.options.layout,
+							'class': 'noty_container'
+						})
+						.appendTo(self.options.custom || document.body);
+					}
 
 					// Apply any layout adjuters on window resize
 					if((adjuster = $.noty.layouts[self.options.layout])) {
@@ -49,6 +57,9 @@
 						})
 						.triggerHandler('resize.'+self.options.id);
 					}
+
+					// Add new class
+					self.container.addClass('i-am-new');
 				}
 
 				// Not needed? Remove new class
@@ -88,7 +99,7 @@
 					})
 					.appendTo( $('.noty_bar', self.wrapper) )
 					.append(
-						$.map(self.options.buttons, function (i, button) {
+						$.map(self.options.buttons, function(button, i) {
 							return $('<button/>', {
 								'class': button.addClass || 'gray',
 								'html': button.text,
@@ -97,7 +108,7 @@
 										button.onClick.call( $(this), self );
 									}
 								}
-							})
+							})[0]
 						})
 					);
 				}
@@ -299,18 +310,27 @@
 		}
 	};
 
+	var win = $(window);
+
 	$.noty = {
 		queue: [],
 		store: {},
 		layouts: {
 			center: function() {
-				this.css({ top: $(window).height() / 2 - this.outerHeight() / 2 });
+				this[0].style.top = (win.height() / 2 - this.outerHeight() / 2) + 'px';
+				this[0].style.left = (win.width() / 2 - this.outerWidth() / 2) + 'px';
 			},
 			centerLeft: function() {
-				this.css({ top: $(window).height() / 2 - this.outerHeight() / 2 });
+				this[0].style.top = (win.height() / 2 - this.outerHeight() / 2) + 'px';
 			},
 			centerRight: function() {
-				this.css({ top: $(window).height() / 2 - this.outerHeight() / 2 });
+				this[0].style.top = (win.height() / 2 - this.outerHeight() / 2) + 'px';
+			},
+			topCenter: function() {
+				this[0].style.left = (win.width() / 2 - this.outerWidth() / 2) + 'px';
+			},
+			bottomCenter: function() {
+				this[0].style.left = (win.width() / 2 - this.outerWidth() / 2) + 'px';
 			}
 		},
 		ontap: true,
@@ -344,7 +364,6 @@
 		},
 
 		consumeAlert: function (options) {
-			window.consumedAlert = window.alert;
 			window.alert = function (text) {
 				if (options) {
 					options.text = text;
@@ -357,7 +376,7 @@
 		},
 
 		stopConsumeAlert: function() {
-			window.alert = window.consumedAlert;
+			delete window.alert;
 		},
 
 		defaults: {
