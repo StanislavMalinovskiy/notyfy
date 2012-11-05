@@ -121,7 +121,7 @@
 				// Attach events
 				$.each(self.options.events, function(event, callback) {
 					if($.isFunction(callback)) {
-						self.wrapper.bind('noty'+callback, callback);
+						self.wrapper.bind('noty'+event, callback);
 					}
 				})
 
@@ -152,11 +152,11 @@
 				}
 
 				// Trigger show event
-				self._triggerEvent('show', [ self ]);
+				self._triggerEvent('show');
 
 				// After-animation methods
 				function after() {
-					self._triggerEvent('visible', [ self ]);
+					self._triggerEvent('shown');
 					self.shown = true;
 				}
 
@@ -199,11 +199,11 @@
 				self.wrapper.addClass('i-am-closing-now');
 
 				// Trigger hide event
-				self._triggerEvent('hid', [ self ]);
+				self._triggerEvent('hide');
 
 				function after() {
 					// Trigger hidden event
-					self._triggerEvent('hidden', [ self ]);
+					self._triggerEvent('hidden');
 
 					// Modal Cleaning
 					if(self.options.modal) { renderer.hideModalFor(self); }
