@@ -80,7 +80,7 @@
 				// Generate notyfy bar
 				var bar = $('<div />', {
 					'id': self.options.id,
-					'class': "notyfy_bar",
+					'class': "notyfy_bar"
 				})
 				.append(self.options.template)
 				.find('.notyfy_text')
@@ -88,7 +88,7 @@
 
 				// Generate notyfy container
 				self.wrapper = $('<li />', {
-					'class': ['notyfy_wrapper', 'notyfy_'+self.options.type].join(' '),
+					'class': ['notyfy_wrapper', 'notyfy_'+self.options.type].join(' ')
 				}).hide().append(bar);
 
 				// Apply theme class
