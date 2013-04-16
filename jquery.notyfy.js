@@ -192,6 +192,8 @@
 							return n;
 						}
 					});
+					self._removeContainerIfNew();
+					delete $.notyfy.store[self.options.id];
 					return;
 				}
 
@@ -215,6 +217,7 @@
 					// Make sure self.wrapper has not been removed before attempting to remove it
 					if(typeof self.wrapper !== 'undefined' && self.wrapper !== null) {
 						self.wrapper.remove();
+						self._removeContainerIfNew()
 						self.wrapper = null;
 						self.closed = true;
 					}
@@ -239,6 +242,10 @@
 				// Otherwise just invoke show() and after()
 				else { self.wrapper.hide(); after(); }
 
+			},
+
+			_removeContainerIfNew: function() {
+				self.container.filter('.i-am-new').remove()
 			},
 
 			setText: function(text) {
