@@ -185,6 +185,7 @@
 			close: function(event) {
 				if(self.closed) return;
 
+				$(window).unbind('resize.' + self.options.id);
 				// If we are still waiting in the queue just delete from queue
 				if(!self.shown) {
 					$.notyfy.queue = $.map($.notyfy.queue, function(n ,i) {
@@ -245,7 +246,8 @@
 			},
 
 			_removeContainerIfNew: function() {
-				self.container.filter('.i-am-new').remove()
+				self.container.filter('.i-am-new').remove();
+				delete self.container;
 			},
 
 			setText: function(text) {
