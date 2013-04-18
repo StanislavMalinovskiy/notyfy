@@ -185,6 +185,7 @@
 			close: function(event) {
 				if(self.closed) return;
 
+				$(window).unbind('resize.' + self.options.id);
 				// If we are still waiting in the queue just delete from queue
 				if(!self.shown) {
 					$.notyfy.queue = $.map($.notyfy.queue, function(n ,i) {
@@ -192,6 +193,8 @@
 							return n;
 						}
 					});
+					self._removeContainerIfNew();
+					delete $.notyfy.store[self.options.id];
 					return;
 				}
 
@@ -215,6 +218,7 @@
 					// Make sure self.wrapper has not been removed before attempting to remove it
 					if(typeof self.wrapper !== 'undefined' && self.wrapper !== null) {
 						self.wrapper.remove();
+						self._removeContainerIfNew()
 						self.wrapper = null;
 						self.closed = true;
 					}
@@ -239,6 +243,11 @@
 				// Otherwise just invoke show() and after()
 				else { self.wrapper.hide(); after(); }
 
+			},
+
+			_removeContainerIfNew: function() {
+				self.container.filter('.i-am-new').remove();
+				delete self.container;
 			},
 
 			setText: function(text) {
