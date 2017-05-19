@@ -246,6 +246,14 @@
 			},
 
 			_removeContainerIfNew: function() {
+				if (notyfy.container === null || notyfy.container === undefined) {
+					return;
+				}
+
+				if (notyfy.self.container.filter('.i-am-new') === null || notyfy.self.container.filter('.i-am-new') === undefined) {
+					return;
+				}
+
 				self.container.filter('.i-am-new').remove();
 				delete self.container;
 			},
@@ -334,12 +342,30 @@
 			}
 		},
 
-		getLayoutCountFor: function(notyfy) {
+		getLayoutCountFor: function (notyfy) {
+			if (notyfy.container === null || notyfy.container === undefined) {
+				return;
+			}
+
+			if (notyfy.container.data('notyfy_layout_count') === null || notyfy.container.data('notyfy_layout_count') === undefined) {
+				return;
+			}
+
 			return notyfy.container.data('notyfy_layout_count') || 0;
+
 		},
 
-		setLayoutCountFor: function(notyfy, arg) {
-			return notyfy.container.data('notyfy_layout_count', renderer.getLayoutCountFor(notyfy) + arg);
+		setLayoutCountFor: function (notyfy, arg) {
+			if (notyfy.container === null || notyfy.container === undefined) {
+				return;
+			}
+
+			if (notyfy.container.data('notyfy_layout_count', renderer.getLayoutCountFor(notyfy) + arg) === null || notyfy.container.data('notyfy_layout_count', renderer.getLayoutCountFor(notyfy) + arg) === undefined) {
+				return;
+			}
+			else {
+				return notyfy.container.data('notyfy_layout_count', renderer.getLayoutCountFor(notyfy) + arg);
+			}
 		},
 
 		getModalCount: function() { return renderer._modals; },
